@@ -1,0 +1,3432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>KaalChakra | The Civilization Journey</title>
+
+
+    <!-- =====================================================
+         BOOTSTRAP
+    ====================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         GOOGLE FONTS
+    ====================================================== -->
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <style>
+
+        /* =====================================================
+           GLOBAL
+        ====================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            width: 100%;
+            height: 100%;
+
+            overflow: hidden;
+
+            background: #000;
+
+            color: #f5e7c1;
+
+        }
+
+
+        body {
+
+            font-family: "Cinzel", serif;
+
+        }
+
+
+        /* =====================================================
+           VIDEO CONTAINER
+        ====================================================== */
+
+        #videoScreen {
+
+            position: fixed;
+
+            inset: 0;
+
+            width: 100vw;
+            height: 100vh;
+
+            background: #000;
+
+            overflow: hidden;
+
+            z-index: 1;
+
+        }
+
+
+        /* =====================================================
+           VIDEO LAYERS
+        ====================================================== */
+
+        .video-layer {
+
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            background: #000;
+
+            opacity: 0;
+
+            transition:
+                opacity 1.4s
+                cubic-bezier(.65, 0, .35, 1);
+
+            pointer-events: none;
+
+            user-select: none;
+
+            will-change: opacity;
+
+            transform: translateZ(0);
+
+            backface-visibility: hidden;
+
+        }
+
+
+        .video-layer.active {
+
+            opacity: 1;
+
+        }
+
+
+        /* =====================================================
+           VIDEO DARK OVERLAY
+        ====================================================== */
+
+        .video-dark {
+
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 5;
+
+            pointer-events: none;
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    rgba(0,0,0,.68),
+                    rgba(0,0,0,.08),
+                    rgba(0,0,0,.68)
+                );
+
+        }
+
+
+        /* =====================================================
+           VIDEO VIGNETTE
+        ====================================================== */
+
+        .video-vignette {
+
+            position: absolute;
+
+            inset: 0;
+
+            z-index: 6;
+
+            pointer-events: none;
+
+            background:
+
+                radial-gradient(
+                    ellipse at center,
+                    transparent 30%,
+                    rgba(0,0,0,.75) 100%
+                );
+
+        }
+
+
+        /* =====================================================
+           CONTENT LAYER
+        ====================================================== */
+
+        #contentLayer {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 20;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =====================================================
+           CONTENT TRANSITIONS
+        ====================================================== */
+
+        .content-wrapper {
+
+            opacity: 0;
+
+            transform:
+                translate(-50%, -50%)
+                translateY(25px);
+
+            transition:
+                opacity .8s ease,
+                transform .8s ease;
+
+            will-change: opacity, transform;
+
+        }
+
+
+        .content-wrapper.visible {
+
+            opacity: 1;
+
+            transform:
+                translate(-50%, -50%)
+                translateY(0);
+
+        }
+
+
+        .content-wrapper.fade-out {
+
+            opacity: 0;
+
+            transform:
+                translate(-50%, -50%)
+                translateY(-20px);
+
+        }
+
+
+        /* =====================================================
+           TOP LOGO
+        ====================================================== */
+
+        .top-logo {
+
+            position: fixed;
+
+            top: 24px;
+
+            left: 30px;
+
+            z-index: 50;
+
+            color: #d6a84d;
+
+            font-size: 13px;
+
+            letter-spacing: 5px;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =====================================================
+           FIRST INTRO SCREEN
+        ====================================================== */
+
+        #introScreen {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 200;
+
+            overflow: hidden;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            background:
+
+                radial-gradient(
+                    circle at center,
+                    #2a1c0d 0%,
+                    #0d0905 45%,
+                    #020202 100%
+                );
+
+            transition:
+
+                opacity .9s ease,
+                visibility .9s ease;
+
+        }
+
+
+        #introScreen.hide {
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            pointer-events: none;
+
+        }
+
+
+        /* =====================================================
+           INTRO GLOW
+        ====================================================== */
+
+        .intro-glow {
+
+            position: absolute;
+
+            width: 550px;
+
+            height: 550px;
+
+            border-radius: 50%;
+
+            background:
+
+                radial-gradient(
+                    circle,
+                    rgba(214,168,77,.18),
+                    transparent 68%
+                );
+
+            animation:
+
+                glowPulse
+                4s
+                ease-in-out
+                infinite;
+
+        }
+
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+
+                transform: scale(.85);
+
+                opacity: .5;
+
+            }
+
+            50% {
+
+                transform: scale(1.15);
+
+                opacity: 1;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           PARTICLES
+        ====================================================== */
+
+        .particles {
+
+            position: absolute;
+
+            inset: 0;
+
+            overflow: hidden;
+
+        }
+
+
+        .particle {
+
+            position: absolute;
+
+            width: 3px;
+
+            height: 3px;
+
+            background: #d6a84d;
+
+            border-radius: 50%;
+
+            opacity: .35;
+
+            animation:
+
+                floatParticle
+                linear
+                infinite;
+
+        }
+
+
+        .particle:nth-child(1) {
+            left: 8%;
+            top: 90%;
+            animation-duration: 8s;
+        }
+
+        .particle:nth-child(2) {
+            left: 17%;
+            top: 85%;
+            animation-duration: 11s;
+        }
+
+        .particle:nth-child(3) {
+            left: 27%;
+            top: 95%;
+            animation-duration: 7s;
+        }
+
+        .particle:nth-child(4) {
+            left: 38%;
+            top: 88%;
+            animation-duration: 10s;
+        }
+
+        .particle:nth-child(5) {
+            left: 48%;
+            top: 92%;
+            animation-duration: 9s;
+        }
+
+        .particle:nth-child(6) {
+            left: 59%;
+            top: 82%;
+            animation-duration: 12s;
+        }
+
+        .particle:nth-child(7) {
+            left: 69%;
+            top: 94%;
+            animation-duration: 8s;
+        }
+
+        .particle:nth-child(8) {
+            left: 78%;
+            top: 86%;
+            animation-duration: 10s;
+        }
+
+        .particle:nth-child(9) {
+            left: 89%;
+            top: 91%;
+            animation-duration: 7s;
+        }
+
+
+        @keyframes floatParticle {
+
+            from {
+
+                transform:
+                    translateY(0)
+                    scale(.5);
+
+                opacity: 0;
+
+            }
+
+            20% {
+
+                opacity: .6;
+
+            }
+
+            80% {
+
+                opacity: .4;
+
+            }
+
+            to {
+
+                transform:
+                    translateY(-100vh)
+                    scale(1.4);
+
+                opacity: 0;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ANCIENT SYMBOL
+        ====================================================== */
+
+        .ancient-symbol {
+
+            position: relative;
+
+            width: 105px;
+
+            height: 105px;
+
+            margin:
+                0 auto 28px;
+
+            border:
+                1px solid
+                rgba(214,168,77,.65);
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            animation:
+                symbolAppear
+                1.4s
+                ease;
+
+        }
+
+
+        .ancient-symbol::before {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 9px;
+
+            border:
+                1px solid
+                rgba(214,168,77,.35);
+
+            border-radius: 50%;
+
+        }
+
+
+        .ancient-symbol::after {
+
+            content: "";
+
+            position: absolute;
+
+            inset: -10px;
+
+            border:
+                1px dashed
+                rgba(214,168,77,.25);
+
+            border-radius: 50%;
+
+            animation:
+                rotateSymbol
+                15s
+                linear
+                infinite;
+
+        }
+
+
+        .symbol-wheel {
+
+            font-size: 42px;
+
+            color: #d6a84d;
+
+            animation:
+                rotateSymbol
+                12s
+                linear
+                infinite;
+
+        }
+
+
+        @keyframes rotateSymbol {
+
+            from {
+
+                transform:
+                    rotate(0deg);
+
+            }
+
+            to {
+
+                transform:
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        @keyframes symbolAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    scale(.4)
+                    rotate(-90deg);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    scale(1)
+                    rotate(0);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           INTRO TEXT
+        ====================================================== */
+
+        .intro-small {
+
+            color: #d6a84d;
+
+            letter-spacing: 7px;
+
+            font-size: 12px;
+
+            margin-bottom: 15px;
+
+            animation:
+                introText
+                1s
+                ease
+                .3s
+                both;
+
+        }
+
+
+        .intro-title {
+
+            color: #f5e7c1;
+
+            font-size:
+
+                clamp(
+                    48px,
+                    9vw,
+                    125px
+                );
+
+            letter-spacing:
+
+                clamp(
+                    7px,
+                    1.4vw,
+                    18px
+                );
+
+            font-weight: 500;
+
+            line-height: 1;
+
+            text-shadow:
+
+                0 0 25px
+                rgba(214,168,77,.25),
+
+                0 5px 30px
+                rgba(0,0,0,.9);
+
+            animation:
+                titleReveal
+                1.4s
+                ease
+                .5s
+                both;
+
+        }
+
+
+        .intro-line {
+
+            width: 120px;
+
+            height: 2px;
+
+            margin:
+                25px auto;
+
+            background: #d6a84d;
+
+            box-shadow:
+
+                0 0 15px
+                rgba(214,168,77,.6);
+
+            animation:
+                lineReveal
+                1s
+                ease
+                1s
+                both;
+
+        }
+
+
+        .intro-subtitle {
+
+            color: #cfc2a5;
+
+            font-family: "Inter", sans-serif;
+
+            font-size:
+
+                clamp(
+                    12px,
+                    1.5vw,
+                    17px
+                );
+
+            letter-spacing: 2px;
+
+            line-height: 1.8;
+
+            animation:
+                introText
+                1s
+                ease
+                1.2s
+                both;
+
+        }
+
+
+        @keyframes titleReveal {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(40px)
+                    scale(.94);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+
+        @keyframes introText {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(20px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        @keyframes lineReveal {
+
+            from {
+
+                width: 0;
+
+                opacity: 0;
+
+            }
+
+            to {
+
+                width: 120px;
+
+                opacity: 1;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           INTRO BUTTONS
+        ====================================================== */
+
+        .intro-buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-top: 35px;
+
+            animation:
+                introText
+                1s
+                ease
+                1.5s
+                both;
+
+        }
+
+
+        /* =====================================================
+           ENTER BUTTON
+        ====================================================== */
+
+        #enterKaalchakra {
+
+            padding:
+                15px 38px;
+
+            border:
+                1px solid
+                #d6a84d;
+
+            background:
+                rgba(5,4,2,.65);
+
+            color: #e5c57c;
+
+            font-family: "Inter", sans-serif;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            letter-spacing: 4px;
+
+            cursor: pointer;
+
+            transition:
+                .35s ease;
+
+        }
+
+
+        #enterKaalchakra:hover {
+
+            background: #d6a84d;
+
+            color: #050403;
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+
+                0 0 30px
+                rgba(214,168,77,.35);
+
+        }
+
+
+        /* =====================================================
+           SKIP VIDEO BUTTON
+           Visible only while the video is playing
+        ====================================================== */
+
+        #skipVideo {
+
+            position: fixed;
+
+            top: 28px;
+
+            right: 30px;
+
+            z-index: 100;
+
+            display: none;
+
+            padding:
+                12px 22px;
+
+            border:
+                1px solid
+                rgba(214,168,77,.55);
+
+            background:
+                rgba(5,4,2,.72);
+
+            color: #d8c8a5;
+
+            font-family: "Inter", sans-serif;
+
+            font-size: 10px;
+
+            font-weight: 600;
+
+            letter-spacing: 3px;
+
+            cursor: pointer;
+
+            transition:
+                .35s ease;
+
+            backdrop-filter:
+                blur(8px);
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,.35);
+
+        }
+
+
+        #skipVideo.show {
+
+            display: block;
+
+            animation:
+                skipButtonAppear
+                .5s
+                ease
+                both;
+
+        }
+
+
+        #skipVideo:hover {
+
+            background:
+                rgba(214,168,77,.16);
+
+            border-color:
+                #d6a84d;
+
+            color:
+                #f5e7c1;
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+
+                0 0 25px
+                rgba(214,168,77,.22);
+
+        }
+
+
+        @keyframes skipButtonAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(-12px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+
+            }
+
+        }
+
+
+        /* =====================================================
+           VIDEO TEXT
+        ====================================================== */
+
+        .eyebrow {
+
+            color: #d6a84d;
+
+            font-size: 12px;
+
+            letter-spacing: 6px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .main-title {
+
+            color: #f5e7c1;
+
+            font-size:
+
+                clamp(
+                    40px,
+                    7vw,
+                    100px
+                );
+
+            letter-spacing: 8px;
+
+            font-weight: 500;
+
+            text-shadow:
+
+                0 5px 25px
+                rgba(0,0,0,.9);
+
+        }
+
+
+        .subtitle {
+
+            color: #d8ccb1;
+
+            font-family: "Inter", sans-serif;
+
+            font-size:
+
+                clamp(
+                    12px,
+                    1.7vw,
+                    18px
+                );
+
+            line-height: 1.8;
+
+            max-width: 780px;
+
+            margin: 20px auto;
+
+        }
+
+
+        .gold-line {
+
+            width: 100px;
+
+            height: 2px;
+
+            background: #d6a84d;
+
+            margin:
+                22px auto;
+
+        }
+
+
+        /* =====================================================
+           CENTER CONTENT
+        ====================================================== */
+
+        .center-content {
+
+            position: absolute;
+
+            left: 50%;
+
+            top: 50%;
+
+            width:
+                min(
+                    1000px,
+                    92vw
+                );
+
+            text-align: center;
+
+        }
+
+
+        /* =====================================================
+           CHAPTER SCREEN
+        ====================================================== */
+
+        .chapter-screen {
+
+            position: absolute;
+
+            left: 50%;
+
+            top: 50%;
+
+            width:
+                min(
+                    1100px,
+                    94vw
+                );
+
+            text-align: center;
+
+        }
+
+
+        .chapter-title {
+
+            color: #f5e7c1;
+
+            font-size:
+
+                clamp(
+                    28px,
+                    4vw,
+                    52px
+                );
+
+            letter-spacing: 5px;
+
+        }
+
+
+        .chapter-subtitle {
+
+            color: #d6a84d;
+
+            font-size: 10px;
+
+            letter-spacing: 4px;
+
+            margin-top: 7px;
+
+        }
+
+
+        .chapter-grid {
+
+            margin-top: 24px;
+
+        }
+
+
+        .chapter-box {
+
+            min-height: 58px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding:
+                9px 13px;
+
+            background:
+                rgba(0,0,0,.55);
+
+            border-left:
+                2px solid
+                rgba(214,168,77,.65);
+
+            backdrop-filter:
+                blur(7px);
+
+            text-align: left;
+
+            opacity: 0;
+
+            transform:
+                translateX(-20px);
+
+            animation:
+                chapterAppear
+                .5s
+                ease
+                forwards;
+
+        }
+
+
+        @keyframes chapterAppear {
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateX(0);
+
+            }
+
+        }
+
+
+        .chapter-number {
+
+            color: #d6a84d;
+
+            font-family: "Inter", sans-serif;
+
+            font-size: 10px;
+
+            min-width: 25px;
+
+        }
+
+
+        .chapter-name {
+
+            color: #eee3c8;
+
+            font-family: "Inter", sans-serif;
+
+            font-size:
+
+                clamp(
+                    9px,
+                    1vw,
+                    12px
+                );
+
+            line-height: 1.35;
+
+        }
+
+
+        /* =====================================================
+           MODE EXPLANATION
+        ====================================================== */
+
+        .mode-explanation {
+
+            position: absolute;
+
+            left: 50%;
+
+            top: 50%;
+
+            width:
+                min(
+                    850px,
+                    90vw
+                );
+
+            text-align: center;
+
+        }
+
+
+        .mode-number-large {
+
+            color:
+                rgba(
+                    214,
+                    168,
+                    77,
+                    .48
+                );
+
+            font-family: "Inter", sans-serif;
+
+            font-size:
+
+                clamp(
+                    80px,
+                    12vw,
+                    150px
+                );
+
+            font-weight: 700;
+
+            line-height: .7;
+
+            text-shadow:
+
+                0 0 18px
+                rgba(214,168,77,.20);
+
+        }
+
+
+        .mode-label {
+
+            color: #d6a84d;
+
+            letter-spacing: 6px;
+
+            font-size: 12px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .mode-big-title {
+
+            color: #f5e7c1;
+
+            font-size:
+
+                clamp(
+                    35px,
+                    6vw,
+                    70px
+                );
+
+            letter-spacing: 5px;
+
+            margin-top: 8px;
+
+        }
+
+
+        .mode-text {
+
+            color: #ddd0b0;
+
+            font-family: "Inter", sans-serif;
+
+            max-width: 700px;
+
+            margin:
+                18px auto;
+
+            line-height: 1.8;
+
+            font-size:
+
+                clamp(
+                    11px,
+                    1.4vw,
+                    16px
+                );
+
+        }
+
+
+        .topic-stage-info {
+
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding:
+                12px 20px;
+
+            border:
+                1px solid
+                rgba(214,168,77,.35);
+
+            background:
+                rgba(0,0,0,.35);
+
+            color: #d8c8a5;
+
+            font-family: "Inter", sans-serif;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+
+            line-height: 1.7;
+
+        }
+
+
+        /* =====================================================
+           MCQ LABEL
+        ====================================================== */
+
+        .mcq-mode-label {
+
+            position: absolute;
+
+            left: 50%;
+
+            bottom: 35px;
+
+            transform:
+                translateX(-50%);
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                10px 18px;
+
+            background:
+                rgba(0,0,0,.55);
+
+            border:
+                1px solid
+                rgba(214,168,77,.35);
+
+            backdrop-filter:
+                blur(8px);
+
+            color: #d6a84d;
+
+            font-family: "Inter", sans-serif;
+
+            font-size: 10px;
+
+            letter-spacing: 4px;
+
+            pointer-events: none;
+
+        }
+
+
+        .mcq-number {
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            color: #e5c57c;
+
+        }
+
+
+        .mcq-divider {
+
+            width: 25px;
+
+            height: 1px;
+
+            background:
+                rgba(214,168,77,.55);
+
+        }
+
+
+        /* =====================================================
+           END SCREEN
+        ====================================================== */
+
+        .end-screen {
+
+            position: absolute;
+
+            left: 50%;
+
+            top: 50%;
+
+            width:
+                min(
+                    900px,
+                    92vw
+                );
+
+            text-align: center;
+
+        }
+
+
+        .end-logo {
+
+            color: #d6a84d;
+
+            font-size:
+
+                clamp(
+                    48px,
+                    8vw,
+                    105px
+                );
+
+            letter-spacing: 9px;
+
+            text-shadow:
+
+                0 0 30px
+                rgba(214,168,77,.4);
+
+        }
+
+
+        .end-title {
+
+            color: #f5e7c1;
+
+            font-size:
+
+                clamp(
+                    22px,
+                    3.5vw,
+                    44px
+                );
+
+            letter-spacing: 3px;
+
+            margin-top: 10px;
+
+        }
+
+
+        .end-text {
+
+            color: #d8ccb1;
+
+            font-family: "Inter", sans-serif;
+
+            font-size:
+
+                clamp(
+                    11px,
+                    1.4vw,
+                    15px
+                );
+
+            line-height: 1.8;
+
+            max-width: 750px;
+
+            margin:
+                18px auto;
+
+        }
+
+
+        .end-points {
+
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+        }
+
+
+        .end-point {
+
+            padding:
+                8px 13px;
+
+            border:
+                1px solid
+                rgba(214,168,77,.35);
+
+            color: #d8c8a5;
+
+            font-family: "Inter", sans-serif;
+
+            font-size: 9px;
+
+        }
+
+
+        /* =====================================================
+           FINAL SCREEN
+        ====================================================== */
+
+        #finalScreen {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 300;
+
+            display: none;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            background:
+                rgba(0,0,0,.15);
+
+        }
+
+
+        #finalScreen.show {
+
+            display: flex;
+
+            animation:
+                finalAppear
+                1.2s
+                ease;
+
+        }
+
+
+        @keyframes finalAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    scale(.97);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    scale(1);
+
+            }
+
+        }
+
+
+        .final-logo {
+
+            color: #d6a84d;
+
+            font-size:
+
+                clamp(
+                    50px,
+                    9vw,
+                    120px
+                );
+
+            letter-spacing: 10px;
+
+            text-shadow:
+
+                0 0 35px
+                rgba(214,168,77,.5);
+
+        }
+
+
+        .final-message {
+
+            color: #ddd0b0;
+
+            font-family: "Inter", sans-serif;
+
+            letter-spacing: 3px;
+
+            font-size: 12px;
+
+        }
+
+
+        #startJourney {
+
+            margin-top: 35px;
+
+            padding:
+                15px 45px;
+
+            background:
+                rgba(5,4,2,.9);
+
+            border:
+                1px solid
+                #d6a84d;
+
+            color: #e5c57c;
+
+            font-family: "Inter", sans-serif;
+
+            font-weight: 600;
+
+            font-size: 12px;
+
+            letter-spacing: 4px;
+
+            cursor: pointer;
+
+            transition:
+                .3s ease;
+
+            pointer-events: auto;
+
+        }
+
+
+        #startJourney:hover {
+
+            background: #d6a84d;
+
+            color: #050403;
+
+            transform:
+                translateY(-4px);
+
+            box-shadow:
+
+                0 0 30px
+                rgba(214,168,77,.45);
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ====================================================== */
+
+        @media(max-width: 900px) {
+
+            .chapter-box {
+
+                min-height: 52px;
+
+            }
+
+        }
+
+
+        @media(max-width: 600px) {
+
+            .top-logo {
+
+                top: 15px;
+
+                left: 15px;
+
+                font-size: 9px;
+
+                letter-spacing: 3px;
+
+            }
+
+
+            .intro-title {
+
+                font-size:
+
+                    clamp(
+                        42px,
+                        15vw,
+                        70px
+                    );
+
+                letter-spacing: 5px;
+
+            }
+
+
+            .ancient-symbol {
+
+                width: 80px;
+
+                height: 80px;
+
+            }
+
+
+            .symbol-wheel {
+
+                font-size: 30px;
+
+            }
+
+
+            .intro-subtitle {
+
+                padding:
+                    0 20px;
+
+                font-size: 11px;
+
+            }
+
+
+            /* STACK INTRO BUTTONS */
+
+            .intro-buttons {
+
+                flex-direction: column;
+
+                gap: 10px;
+
+            }
+
+
+            #enterKaalchakra {
+
+                width: 220px;
+
+            }
+
+
+            #skipVideo {
+
+                top: 15px;
+
+                right: 15px;
+
+                padding:
+                    10px 14px;
+
+                font-size: 8px;
+
+                letter-spacing: 2px;
+
+            }
+
+
+            .chapter-screen {
+
+                width: 92vw;
+
+            }
+
+
+            .chapter-grid {
+
+                margin-top: 12px;
+
+            }
+
+
+            .chapter-box {
+
+                min-height: 42px;
+
+                padding:
+                    5px 7px;
+
+                gap: 7px;
+
+            }
+
+
+            .chapter-name {
+
+                font-size: 8px;
+
+            }
+
+
+            .chapter-number {
+
+                min-width: 20px;
+
+                font-size: 8px;
+
+            }
+
+
+            .mode-explanation {
+
+                width: 92vw;
+
+            }
+
+
+            .mode-big-title {
+
+                font-size: 32px;
+
+                letter-spacing: 3px;
+
+            }
+
+
+            .mode-text {
+
+                font-size: 10px;
+
+            }
+
+
+            .topic-stage-info {
+
+                font-size: 8px;
+
+                padding:
+                    9px 12px;
+
+            }
+
+
+            .end-text {
+
+                padding:
+                    0 10px;
+
+            }
+
+
+            .mcq-mode-label {
+
+                bottom: 20px;
+
+                font-size: 8px;
+
+                letter-spacing: 3px;
+
+                padding:
+                    8px 13px;
+
+            }
+
+        }
+
+
+        @media(max-width: 380px) {
+
+            .chapter-name {
+
+                font-size: 7px;
+
+            }
+
+
+            .chapter-box {
+
+                min-height: 38px;
+
+            }
+
+
+            .mode-big-title {
+
+                font-size: 27px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         INTRO
+    ====================================================== -->
+
+    <section id="introScreen">
+
+        <div class="intro-glow"></div>
+
+
+        <div class="particles">
+
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+            <span class="particle"></span>
+
+        </div>
+
+
+        <div class="intro-content">
+
+            <div class="ancient-symbol">
+
+                <div class="symbol-wheel">
+
+                    ☸
+
+                </div>
+
+            </div>
+
+
+            <div class="intro-small">
+
+                A JOURNEY THROUGH TIME
+
+            </div>
+
+
+            <h1 class="intro-title">
+
+                KAALCHAKRA
+
+            </h1>
+
+
+            <div class="intro-line"></div>
+
+
+            <p class="intro-subtitle">
+
+                Discover civilizations.
+                <br>
+
+                Solve mysteries.
+                <br>
+
+                Rewrite the story of history.
+
+            </p>
+
+
+            <!-- =================================================
+                 INTRO BUTTONS
+            ================================================== -->
+
+            <div class="intro-buttons">
+
+                <button id="enterKaalchakra">
+
+                    ENTER KAALCHAKRA
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         VIDEO SCREEN
+    ====================================================== -->
+
+    <section id="videoScreen">
+
+
+        <video
+            id="videoA"
+            class="video-layer active"
+            playsinline
+            preload="auto"
+            tabindex="-1"
+            disablePictureInPicture
+        ></video>
+
+
+        <video
+            id="videoB"
+            class="video-layer"
+            playsinline
+            preload="auto"
+            tabindex="-1"
+            disablePictureInPicture
+        ></video>
+
+
+        <div class="video-dark"></div>
+
+        <div class="video-vignette"></div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SKIP VIDEO BUTTON
+         This button appears only after the video starts.
+         Clicking it sends the user to /register.
+    ====================================================== -->
+
+    <button id="skipVideo" type="button">
+
+        SKIP INTRO →
+
+    </button>
+
+
+
+    <!-- =====================================================
+         TOP LOGO
+    ====================================================== -->
+
+    <div class="top-logo">
+
+        KAALCHAKRA
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <div id="contentLayer"></div>
+
+
+
+    <!-- =====================================================
+         FINAL SCREEN
+    ====================================================== -->
+
+    <section id="finalScreen">
+
+        <div>
+
+            <div class="final-logo">
+
+                KAALCHAKRA
+
+            </div>
+
+
+            <div class="gold-line"></div>
+
+
+            <div class="final-message">
+
+                YOUR JOURNEY THROUGH HISTORY
+                BEGINS NOW
+
+            </div>
+
+
+            <button id="startJourney">
+
+                START JOURNEY
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+
+        /* =====================================================
+           VIDEO LIST
+        ====================================================== */
+
+        const videos = [
+
+            {
+                file: "/assets/IntroVideos/KaalChakra.mp4",
+                type: "kaalchakra"
+            },
+
+            {
+                file: "/assets/IntroVideos/IntroChapter.mp4",
+                type: "chapters"
+            },
+
+            {
+                file: "/assets/IntroVideos/PuzzleMode.mp4",
+                type: "puzzle"
+            },
+
+            {
+                file: "/assets/IntroVideos/MysteryMode.mp4",
+                type: "mystery"
+            },
+
+            {
+                file: "/assets/IntroVideos/McqMode.mp4",
+                type: "mcq"
+            },
+
+            {
+                file: "/assets/IntroVideos/End.mp4",
+                type: "end"
+            }
+
+        ];
+
+
+        /* =====================================================
+           CHAPTERS
+        ====================================================== */
+
+        const chapters = [
+
+            "What, Where, How and When?",
+
+            "On the Trail of the Earliest People",
+
+            "From Gathering to Growing Food",
+
+            "In the Earliest Cities",
+
+            "What Books and Burials Tell Us",
+
+            "Kingdoms, Kings and an Early Republic",
+
+            "New Questions and Ideas",
+
+            "Ashoka, the Emperor Who Gave Up War",
+
+            "Vital Villages, Thriving Towns",
+
+            "Traders, Kings and Pilgrims",
+
+            "New Empires and Kingdoms",
+
+            "Buildings, Paintings and Books"
+
+        ];
+
+
+        /* =====================================================
+           ELEMENTS
+        ====================================================== */
+
+        const introScreen =
+            document.getElementById(
+                "introScreen"
+            );
+
+
+        const enterButton =
+            document.getElementById(
+                "enterKaalchakra"
+            );
+
+
+        /* =====================================================
+           SKIP VIDEO BUTTON
+        ====================================================== */
+
+        const skipVideo =
+            document.getElementById(
+                "skipVideo"
+            );
+
+
+        const videoA =
+            document.getElementById(
+                "videoA"
+            );
+
+
+        const videoB =
+            document.getElementById(
+                "videoB"
+            );
+
+
+        const contentLayer =
+            document.getElementById(
+                "contentLayer"
+            );
+
+
+        const finalScreen =
+            document.getElementById(
+                "finalScreen"
+            );
+
+
+        const startJourney =
+            document.getElementById(
+                "startJourney"
+            );
+
+
+        /* =====================================================
+           VIDEO STATE
+        ====================================================== */
+
+        let activeVideo = videoA;
+
+        let inactiveVideo = videoB;
+
+        let currentVideo = 0;
+
+        let switching = false;
+
+
+        const CONTENT_FADE_TIME = 700;
+
+        const VIDEO_FADE_TIME = 1400;
+
+
+        /* =====================================================
+           CONTENT TRANSITION
+        ====================================================== */
+
+        function replaceContent(type) {
+
+            const oldContent =
+                contentLayer.firstElementChild;
+
+
+            if (oldContent) {
+
+                oldContent.classList.remove(
+                    "visible"
+                );
+
+                oldContent.classList.add(
+                    "fade-out"
+                );
+
+            }
+
+
+            setTimeout(
+                () => {
+
+                    showContent(type);
+
+                },
+                CONTENT_FADE_TIME
+            );
+
+        }
+
+
+        /* =====================================================
+           KAALCHAKRA CONTENT
+        ====================================================== */
+
+        function showKaalchakra() {
+
+            contentLayer.innerHTML = `
+
+                <div
+                    class="content-wrapper center-content"
+                >
+
+                    <div class="eyebrow">
+
+                        THE BEGINNING
+
+                    </div>
+
+
+                    <h1 class="main-title">
+
+                        KAALCHAKRA
+
+                    </h1>
+
+
+                    <div class="gold-line"></div>
+
+
+                    <p class="subtitle">
+
+                        A journey through India's
+                        civilization, history and culture.
+
+                        <br>
+
+                        Learn history by experiencing it.
+
+                    </p>
+
+                </div>
+
+            `;
+
+
+            activateContent();
+
+        }
+
+
+        /* =====================================================
+           CHAPTERS
+        ====================================================== */
+
+        function showChapters() {
+
+            let html = "";
+
+
+            chapters.forEach(
+                (chapter, index) => {
+
+                    html += `
+
+                        <div class="col-6">
+
+                            <div
+                                class="chapter-box"
+                                style="
+                                    animation-delay:
+                                    ${index * .07}s
+                                "
+                            >
+
+                                <span
+                                    class="chapter-number"
+                                >
+
+                                    ${String(index + 1)
+                                        .padStart(
+                                            2,
+                                            "0"
+                                        )}
+
+                                </span>
+
+
+                                <span
+                                    class="chapter-name"
+                                >
+
+                                    ${chapter}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+            contentLayer.innerHTML = `
+
+                <div
+                    class="
+                        content-wrapper
+                        chapter-screen
+                    "
+                >
+
+                    <div class="chapter-title">
+
+                        CLASS VI
+
+                    </div>
+
+
+                    <div class="chapter-subtitle">
+
+                        EXPLORE THE CHAPTERS
+
+                    </div>
+
+
+                    <div
+                        class="
+                            row
+                            g-2
+                            chapter-grid
+                        "
+                    >
+
+                        ${html}
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            activateContent();
+
+        }
+
+
+        /* =====================================================
+           PUZZLE
+        ====================================================== */
+
+        function showPuzzle() {
+
+            contentLayer.innerHTML = `
+
+                <div
+                    class="
+                        content-wrapper
+                        mode-explanation
+                    "
+                >
+
+                    <div class="mode-number-large">
+
+                        01
+
+                    </div>
+
+
+                    <div class="mode-label">
+
+                        PUZZLE MODE
+
+                    </div>
+
+
+                    <div class="mode-big-title">
+
+                        SOLVE THE PAST
+
+                    </div>
+
+
+                    <div class="gold-line"></div>
+
+
+                    <p class="mode-text">
+
+                        Every chapter will have its
+                        own puzzle challenges based
+                        on the important topics
+                        covered in that chapter.
+
+                        <br><br>
+
+                        The stages will change
+                        according to the chapter's
+                        content.
+
+                    </p>
+
+
+                    <div class="topic-stage-info">
+
+                        STAGES • BASED ON CHAPTER TOPICS
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            activateContent();
+
+        }
+
+
+        /* =====================================================
+           MYSTERY
+        ====================================================== */
+
+        function showMystery() {
+
+            contentLayer.innerHTML = `
+
+                <div
+                    class="
+                        content-wrapper
+                        mode-explanation
+                    "
+                >
+
+                    <div class="mode-number-large">
+
+                        02
+
+                    </div>
+
+
+                    <div class="mode-label">
+
+                        MYSTERY MODE
+
+                    </div>
+
+
+                    <div class="mode-big-title">
+
+                        UNLOCK THE SECRET
+
+                    </div>
+
+
+                    <div class="gold-line"></div>
+
+
+                    <p class="mode-text">
+
+                        Players investigate historical
+                        clues, connect evidence and
+                        uncover hidden stories.
+
+                        <br><br>
+
+                        The mystery stages will be
+                        designed according to the
+                        topics of each individual
+                        chapter.
+
+                    </p>
+
+
+                    <div class="topic-stage-info">
+
+                        STAGES • BASED ON CHAPTER TOPICS
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            activateContent();
+
+        }
+
+
+        /* =====================================================
+           MCQ
+        ====================================================== */
+
+        function showMCQ() {
+
+            contentLayer.innerHTML = `
+
+                <div
+                    class="
+                        content-wrapper
+                        mcq-mode-label
+                    "
+                >
+
+                    <span class="mcq-number">
+
+                        03
+
+                    </span>
+
+
+                    <span class="mcq-divider"></span>
+
+
+                    <span>
+
+                        MCQ MODE
+
+                    </span>
+
+                </div>
+
+            `;
+
+
+            activateContent();
+
+        }
+
+
+        /* =====================================================
+           END
+        ====================================================== */
+
+        function showEnd() {
+
+            contentLayer.innerHTML = `
+
+                <div
+                    class="
+                        content-wrapper
+                        end-screen
+                    "
+                >
+
+                    <div class="end-logo">
+
+                        KAALCHAKRA
+
+                    </div>
+
+
+                    <div class="gold-line"></div>
+
+
+                    <div class="end-title">
+
+                        HISTORY BECOMES A JOURNEY
+
+                    </div>
+
+
+                    <p class="end-text">
+
+                        Explore every chapter.
+                        Solve puzzles.
+                        Uncover mysteries.
+                        Test your knowledge.
+
+                        <br><br>
+
+                        KaalChakra turns learning
+                        history into an experience
+                        where players discover
+                        India's civilization
+                        through play.
+
+                    </p>
+
+
+                    <div class="end-points">
+
+                        <span class="end-point">
+
+                            CHAPTERS
+
+                        </span>
+
+
+                        <span class="end-point">
+
+                            PUZZLE
+
+                        </span>
+
+
+                        <span class="end-point">
+
+                            MYSTERY
+
+                        </span>
+
+
+                        <span class="end-point">
+
+                            MCQ
+
+                        </span>
+
+
+                        <span class="end-point">
+
+                            LEARN • PLAY • DISCOVER
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            activateContent();
+
+        }
+
+
+        /* =====================================================
+           CONTENT CONTROLLER
+        ====================================================== */
+
+        function showContent(type) {
+
+            contentLayer.innerHTML = "";
+
+
+            switch(type) {
+
+                case "kaalchakra":
+
+                    showKaalchakra();
+
+                    break;
+
+
+                case "chapters":
+
+                    showChapters();
+
+                    break;
+
+
+                case "puzzle":
+
+                    showPuzzle();
+
+                    break;
+
+
+                case "mystery":
+
+                    showMystery();
+
+                    break;
+
+
+                case "mcq":
+
+                    showMCQ();
+
+                    break;
+
+
+                case "end":
+
+                    showEnd();
+
+                    break;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           ACTIVATE CONTENT
+        ====================================================== */
+
+        function activateContent() {
+
+            requestAnimationFrame(
+                () => {
+
+                    const content =
+                        contentLayer.firstElementChild;
+
+
+                    if (content) {
+
+                        requestAnimationFrame(
+                            () => {
+
+                                content.classList.add(
+                                    "visible"
+                                );
+
+                            }
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           PRELOAD NEXT VIDEO
+        ====================================================== */
+
+        function preloadNext(index) {
+
+            const nextIndex =
+                index + 1;
+
+
+            if (
+                nextIndex >=
+                videos.length
+            ) {
+
+                return;
+
+            }
+
+
+            inactiveVideo.src =
+                videos[nextIndex].file;
+
+
+            inactiveVideo.preload =
+                "auto";
+
+
+            inactiveVideo.load();
+
+        }
+
+
+        /* =====================================================
+           START VIDEO SEQUENCE
+
+           startIndex:
+
+           0 = KaalChakra.mp4
+           1 = IntroChapter.mp4
+        ====================================================== */
+
+        function startJourneyVideos(startIndex = 0) {
+
+            currentVideo = startIndex;
+
+            switching = false;
+
+
+            /*
+             * Show the skip button only after
+             * the intro screen has been left
+             * and the video journey has started.
+             */
+
+            skipVideo.classList.add("show");
+
+
+            /*
+             * Show content for selected video
+             */
+
+            showContent(
+                videos[startIndex].type
+            );
+
+
+            /*
+             * Load selected video
+             */
+
+            activeVideo.src =
+                videos[startIndex].file;
+
+
+            activeVideo.preload =
+                "auto";
+
+
+            activeVideo.load();
+
+
+            /*
+             * Audio starts because
+             * the user clicked a button.
+             */
+
+            activeVideo.muted = false;
+
+
+            activeVideo.play()
+
+                .then(() => {
+
+                    preloadNext(startIndex);
+
+                })
+
+                .catch(error => {
+
+                    console.log(
+                        "First video error:",
+                        error
+                    );
+
+                });
+
+        }
+
+
+        /* =====================================================
+           SMOOTH VIDEO TRANSITION
+        ====================================================== */
+
+        function switchToNextVideo() {
+
+            if (switching) {
+
+                return;
+
+            }
+
+
+            switching = true;
+
+
+            const nextIndex =
+                currentVideo + 1;
+
+
+            /*
+             * All videos completed.
+             */
+
+            if (
+                nextIndex >=
+                videos.length
+            ) {
+
+                finishVideos();
+
+                return;
+
+            }
+
+
+            const nextVideo =
+                inactiveVideo;
+
+
+            const oldVideo =
+                activeVideo;
+
+
+            /*
+             * Make sure the next video
+             * has the correct source.
+             */
+
+            nextVideo.src =
+                videos[nextIndex].file;
+
+
+            nextVideo.preload =
+                "auto";
+
+
+            nextVideo.load();
+
+
+            nextVideo.muted = false;
+
+
+            /*
+             * Start next video first.
+             */
+
+            const playPromise =
+                nextVideo.play();
+
+
+            if (
+                playPromise !== undefined
+            ) {
+
+                playPromise
+
+                    .then(() => {
+
+
+                        /*
+                         * Update video index.
+                         */
+
+                        currentVideo =
+                            nextIndex;
+
+
+                        /*
+                         * Fade old written content.
+                         */
+
+                        const oldContent =
+                            contentLayer
+                                .firstElementChild;
+
+
+                        if (oldContent) {
+
+                            oldContent.classList.remove(
+                                "visible"
+                            );
+
+                            oldContent.classList.add(
+                                "fade-out"
+                            );
+
+                        }
+
+
+                        /*
+                         * Crossfade videos.
+                         */
+
+                        nextVideo.classList.add(
+                            "active"
+                        );
+
+
+                        oldVideo.classList.remove(
+                            "active"
+                        );
+
+
+                        /*
+                         * Replace written content.
+                         */
+
+                        setTimeout(
+                            () => {
+
+                                showContent(
+                                    videos[
+                                        nextIndex
+                                    ].type
+                                );
+
+                            },
+                            CONTENT_FADE_TIME
+                        );
+
+
+                        /*
+                         * Stop old video after
+                         * crossfade.
+                         */
+
+                        setTimeout(
+                            () => {
+
+                                oldVideo.pause();
+
+
+                                oldVideo.removeAttribute(
+                                    "src"
+                                );
+
+
+                                oldVideo.load();
+
+
+                                /*
+                                 * Swap layers.
+                                 */
+
+                                activeVideo =
+                                    nextVideo;
+
+
+                                inactiveVideo =
+                                    oldVideo;
+
+
+                                switching =
+                                    false;
+
+
+                                /*
+                                 * Preload following video.
+                                 */
+
+                                preloadNext(
+                                    currentVideo
+                                );
+
+                            },
+                            VIDEO_FADE_TIME
+                        );
+
+                    })
+
+                    .catch(error => {
+
+                        console.log(
+                            "Transition error:",
+                            error
+                        );
+
+
+                        switching =
+                            false;
+
+                    });
+
+            }
+
+        }
+
+
+        /* =====================================================
+           VIDEO ENDED EVENTS
+        ====================================================== */
+
+        videoA.addEventListener(
+            "ended",
+            function() {
+
+                if (
+                    activeVideo ===
+                    videoA
+                ) {
+
+                    switchToNextVideo();
+
+                }
+
+            }
+        );
+
+
+        videoB.addEventListener(
+            "ended",
+            function() {
+
+                if (
+                    activeVideo ===
+                    videoB
+                ) {
+
+                    switchToNextVideo();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           ENTER KAALCHAKRA
+        ====================================================== */
+
+        enterButton.addEventListener(
+            "click",
+            function() {
+
+                introScreen.classList.add(
+                    "hide"
+                );
+
+
+                /*
+                 * Start from first video
+                 *
+                 * KaalChakra.mp4
+                 */
+
+                startJourneyVideos(0);
+
+            }
+        );
+
+
+        /* =====================================================
+           SKIP VIDEO
+           Redirect user to /register
+        ====================================================== */
+
+        skipVideo.addEventListener(
+            "click",
+            function() {
+
+                /*
+                 * Stop the currently playing video.
+                 */
+
+                if (activeVideo) {
+
+                    activeVideo.pause();
+
+                }
+
+
+                /*
+                 * Hide the skip button.
+
+                 */
+
+                skipVideo.classList.remove(
+                    "show"
+                );
+
+
+                /*
+                 * Redirect to the registration page.
+                 *
+                 * This HTML file is inside HTML_files,
+                 * so /register goes one folder up
+                 * to the KaalChakra project folder.
+                 */
+
+                window.location.href =
+                    "/register";
+
+            }
+        );
+
+
+        /* =====================================================
+           BLOCK VIDEO INTERACTION
+        ====================================================== */
+
+        [videoA, videoB].forEach(
+            function(video) {
+
+
+                video.addEventListener(
+                    "click",
+                    function(event) {
+
+                        event.preventDefault();
+
+                    }
+                );
+
+
+                video.addEventListener(
+                    "dblclick",
+                    function(event) {
+
+                        event.preventDefault();
+
+                    }
+                );
+
+
+                video.addEventListener(
+                    "contextmenu",
+                    function(event) {
+
+                        event.preventDefault();
+
+                    }
+                );
+
+
+                video.addEventListener(
+                    "keydown",
+                    function(event) {
+
+                        event.preventDefault();
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           FINISH VIDEOS
+        ====================================================== */
+
+        function finishVideos() {
+
+            /*
+             * Hide the skip button when
+             * the complete video sequence ends.
+             */
+
+            skipVideo.classList.remove(
+                "show"
+            );
+
+
+            /*
+             * Fade written content away.
+             */
+
+            const content =
+                contentLayer.firstElementChild;
+
+
+            if (content) {
+
+                content.classList.remove(
+                    "visible"
+                );
+
+                content.classList.add(
+                    "fade-out"
+                );
+
+            }
+
+
+            /*
+             * Wait until text disappears,
+             * then show final CTA.
+             */
+
+            setTimeout(
+                () => {
+
+                    contentLayer.innerHTML = "";
+
+                    finalScreen.classList.add(
+                        "show"
+                    );
+
+                },
+                CONTENT_FADE_TIME
+            );
+
+        }
+
+
+        /* =====================================================
+           START JOURNEY
+        ====================================================== */
+
+        startJourney.addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "/register";
+
+            }
+        );
+
+
+    </script>
+
+
+</body>
+
+</html>

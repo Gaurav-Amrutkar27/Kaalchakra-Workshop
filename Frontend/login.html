@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAALCHAKRA | Login</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Philosopher:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           ROOT VARIABLES & RESET
+        ========================================================= */
+        :root {
+            --bg-deep: #140b05;
+            --bg-mid: #27160c;
+            --bg-warm: #422514;
+            --gold-light: #fff3d1;
+            --gold-bright: #f5cf75;
+            --gold-rich: #d4a753;
+            --gold-dark: #916828;
+            --amber-glow: rgba(245, 195, 95, 0.22);
+            --glass-bg: rgba(28, 16, 9, 0.74);
+            --glass-border: rgba(226, 182, 103, 0.38);
+            --glass-inner-border: rgba(226, 182, 103, 0.16);
+            --input-bg: rgba(14, 8, 4, 0.68);
+            --input-border: rgba(212, 168, 83, 0.38);
+            --input-focus: #f3c96d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Philosopher', Georgia, serif;
+            color: var(--gold-light);
+            background-color: var(--bg-deep);
+            background-image:
+                /* Warm central dawn radiance */
+                radial-gradient(ellipse 65% 55% at 50% 18%, rgba(214, 155, 62, 0.28) 0%, rgba(130, 75, 25, 0.16) 45%, transparent 75%),
+                /* Flanking ambient golden glow for murals */
+                radial-gradient(circle at 12% 45%, rgba(196, 133, 47, 0.16) 0%, transparent 42%),
+                radial-gradient(circle at 88% 45%, rgba(196, 133, 47, 0.16) 0%, transparent 42%),
+                /* Warm bottom glow */
+                radial-gradient(ellipse 80% 40% at 50% 100%, rgba(142, 85, 30, 0.22) 0%, transparent 60%),
+                /* Deep rich historical brown background */
+                linear-gradient(155deg, #180d06 0%, #29170c 35%, #1d1007 70%, #0d0603 100%);
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* Subtle ancient geometrical grid */
+        .ancient-mesh {
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(rgba(212, 168, 83, 0.08) 1px, transparent 1px),
+                radial-gradient(rgba(180, 115, 45, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* =========================================================
+           CANVAS ATMOSPHERE (GOLDEN EMBERS & TIME DUST)
+        ========================================================= */
+        #bgCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* =========================================================
+           GIANT ROTATING KAALCHAKRA (WHEEL OF TIME)
+        ========================================================= */
+        .kaalchakra-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(840px, 92vw);
+            height: min(840px, 92vw);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.38;
+            transition: opacity 0.8s ease;
+        }
+
+        .kaalchakra-svg {
+            width: 100%;
+            height: 100%;
+            transform-origin: center center;
+            animation: spinKaalchakra 90s linear infinite;
+            filter: drop-shadow(0 0 25px rgba(212, 168, 83, 0.25));
+        }
+
+        .kaalchakra-outer-ring {
+            transform-origin: center center;
+            animation: spinCounter 120s linear infinite;
+        }
+
+        @keyframes spinKaalchakra {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes spinCounter {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        /* =========================================================
+           HISTORICAL FLANKING MURALS (CLASS 6 CURRICULUM)
+        ========================================================= */
+        .history-mural {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 320px;
+            max-width: 25vw;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.42;
+            transition: opacity 0.6s ease;
+        }
+
+        .mural-left {
+            left: 25px;
+        }
+
+        .mural-right {
+            right: 25px;
+        }
+
+        .mural-svg {
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+        }
+
+        .mural-caption {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            color: var(--gold-bright);
+            margin-top: 10px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            border-bottom: 1px solid rgba(212, 168, 83, 0.3);
+            padding-bottom: 5px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        @media (max-width: 1120px) {
+            .history-mural {
+                opacity: 0.22;
+                max-width: 18vw;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .history-mural {
+                display: none;
+            }
+            .kaalchakra-container {
+                opacity: 0.28;
+            }
+        }
+
+        /* =========================================================
+           MAIN PAGE LAYOUT
+        ========================================================= */
+        .main-page {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 18px;
+        }
+
+        /* =========================================================
+           FROSTED GLASSMORPHISM CARD
+        ========================================================= */
+        .glass-card {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            padding: 44px 38px 36px;
+
+            /* High optical frosted glass diffusion: background images blur smoothly behind it */
+            background: linear-gradient(150deg, rgba(35, 20, 11, 0.82) 0%, rgba(22, 12, 6, 0.86) 100%);
+            backdrop-filter: blur(28px) saturate(175%) contrast(105%);
+            -webkit-backdrop-filter: blur(28px) saturate(175%) contrast(105%);
+
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.75),
+                0 0 35px rgba(212, 168, 83, 0.12),
+                inset 0 1px 1px rgba(255, 240, 190, 0.25),
+                inset 0 0 30px rgba(180, 120, 45, 0.08);
+
+            animation: cardElevate 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes cardElevate {
+            from {
+                opacity: 0;
+                transform: translateY(35px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Inner ancient decorative border */
+        .inner-frame {
+            position: absolute;
+            inset: 9px;
+            border: 1px solid var(--glass-inner-border);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        /* Ornamental golden corner brackets */
+        .corner-bracket {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-color: var(--gold-rich);
+            border-style: solid;
+            pointer-events: none;
+            opacity: 0.85;
+            transition: all 0.3s ease;
+        }
+
+        .corner-bracket.tl {
+            top: 6px;
+            left: 6px;
+            border-width: 2px 0 0 2px;
+            border-top-left-radius: 6px;
+        }
+
+        .corner-bracket.tr {
+            top: 6px;
+            right: 6px;
+            border-width: 2px 2px 0 0;
+            border-top-right-radius: 6px;
+        }
+
+        .corner-bracket.bl {
+            bottom: 6px;
+            left: 6px;
+            border-width: 0 0 2px 2px;
+            border-bottom-left-radius: 6px;
+        }
+
+        .corner-bracket.br {
+            bottom: 6px;
+            right: 6px;
+            border-width: 0 2px 2px 0;
+            border-bottom-right-radius: 6px;
+        }
+
+        .glass-card:hover .corner-bracket {
+            border-color: var(--gold-bright);
+            opacity: 1;
+            filter: drop-shadow(0 0 6px rgba(245, 207, 117, 0.5));
+        }
+
+        /* =========================================================
+           CARD HEADER & LOGO
+        ========================================================= */
+        .header-emblem {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .emblem-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--gold-bright);
+            filter: drop-shadow(0 0 12px rgba(245, 207, 117, 0.45));
+            animation: pulseEmblem 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseEmblem {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(245, 207, 117, 0.35)); }
+            50% { transform: scale(1.06); filter: drop-shadow(0 0 18px rgba(245, 207, 117, 0.6)); }
+        }
+
+        .logo-title {
+            font-family: 'Cinzel', Georgia, serif;
+            text-align: center;
+            font-size: clamp(28px, 6vw, 42px);
+            font-weight: 900;
+            letter-spacing: clamp(3px, 0.8vw, 6px);
+            line-height: 1.1;
+            margin: 0 auto;
+
+            background: linear-gradient(135deg, #ffeec2 0%, #f3c86c 40%, #d49b38 70%, #fff3ce 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8));
+            animation: shimmerTitle 8s linear infinite;
+        }
+
+        @keyframes shimmerTitle {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+
+        .ancient-line {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0 8px;
+            color: var(--gold-rich);
+        }
+
+        .ancient-line::before,
+        .ancient-line::after {
+            content: "";
+            flex: 1;
+            max-width: 90px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-rich), transparent);
+        }
+
+        .ancient-glyph {
+            font-size: 14px;
+            animation: spinGlyph 10s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spinGlyph {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card-subtitle {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--gold-bright);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.92;
+        }
+
+        .card-desc {
+            text-align: center;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #d6be95;
+            margin: 0 auto 22px;
+            max-width: 380px;
+        }
+
+        .card-desc strong {
+            color: var(--gold-bright);
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           FORM CONTROLS (HIGH CONTRAST & FROSTED GLASS)
+        ========================================================= */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #ebd096;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--gold-rich);
+            font-size: 15px;
+            pointer-events: none;
+            opacity: 0.8;
+            transition: color 0.3s ease;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 48px;
+            padding: 0 16px 0 42px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            color: var(--gold-light);
+            font-family: 'Philosopher', Georgia, serif;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-control::placeholder {
+            color: #9e8561;
+            font-style: italic;
+            font-size: 13.5px;
+        }
+
+        .form-control:focus {
+            background: rgba(18, 10, 5, 0.9);
+            border-color: var(--input-focus);
+            color: #fff9e6;
+            outline: none;
+            box-shadow:
+                0 0 0 3px rgba(243, 201, 109, 0.15),
+                0 0 18px rgba(243, 201, 109, 0.25),
+                inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-control:focus + .input-icon,
+        .input-wrapper:focus-within .input-icon {
+            color: var(--gold-bright);
+            opacity: 1;
+            filter: drop-shadow(0 0 6px rgba(245, 207, 117, 0.5));
+        }
+
+        /* Password toggle button */
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--gold-rich);
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+            font-size: 15px;
+        }
+
+        .password-toggle:hover {
+            color: var(--gold-bright);
+        }
+
+        /* =========================================================
+           REMEMBER ME & FORGOT PASSWORD
+        ========================================================= */
+        .login-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: -2px;
+            margin-bottom: 20px;
+            font-size: 12.5px;
+            color: #c7a776;
+        }
+
+        .remember-wrap {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .remember-wrap input[type="checkbox"] {
+            accent-color: var(--gold-rich);
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #e5be70;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: #fff1b8;
+            text-shadow: 0 0 8px rgba(245, 207, 117, 0.5);
+            text-decoration: underline;
+        }
+
+        /* =========================================================
+           ROYAL LOGIN BUTTON
+        ========================================================= */
+        .btn-portal {
+            width: 100%;
+            height: 52px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+
+            background: linear-gradient(135deg, #e5ba62 0%, #c49237 45%, #8a5d1b 100%);
+            border: 1px solid #fedf92;
+            border-radius: 6px;
+
+            color: #170c04;
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.55),
+                0 0 20px rgba(229, 186, 98, 0.25),
+                inset 0 1px 1px rgba(255, 255, 255, 0.45);
+
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .btn-portal::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 80%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transform: skewX(-22deg);
+            animation: btnShine 4.5s ease-in-out infinite;
+        }
+
+        @keyframes btnShine {
+            0% { left: -120%; }
+            30%, 100% { left: 140%; }
+        }
+
+        .btn-portal:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #f3cb75 0%, #d4a042 45%, #9a6922 100%);
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, 0.65),
+                0 0 28px rgba(245, 207, 117, 0.4),
+                inset 0 1px 2px rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-portal:active {
+            transform: translateY(0);
+        }
+
+        /* =========================================================
+           MESSAGES (FROSTED GLASS ALERTS)
+        ========================================================= */
+        .message-box {
+            display: none;
+            margin-top: 15px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            animation: fadeInMsg 0.3s ease forwards;
+        }
+
+        .message-box.show {
+            display: block;
+        }
+
+        .message-box.error {
+            background: rgba(115, 35, 25, 0.4);
+            border: 1px solid #ab4b3d;
+            color: #ffd4ce;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .message-box.success {
+            background: rgba(45, 95, 40, 0.4);
+            border: 1px solid #6aa55d;
+            color: #ddffd4;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .message-box.info {
+            background: rgba(110, 75, 25, 0.4);
+            border: 1px solid #d4a753;
+            color: #ffe6aa;
+        }
+
+        @keyframes fadeInMsg {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================================
+           CARD FOOTER NAVIGATION
+        ========================================================= */
+        .footer-nav {
+            margin-top: 22px;
+            text-align: center;
+        }
+
+        .register-call {
+            font-size: 13.5px;
+            color: #bf9f72;
+            margin-bottom: 12px;
+        }
+
+        .register-call a {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            color: var(--gold-bright);
+            text-decoration: none;
+            margin-left: 6px;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
+
+        .register-call a:hover {
+            color: #fff5d6;
+            text-shadow: 0 0 10px rgba(245, 207, 117, 0.6);
+            text-decoration: underline;
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            color: #9c805a;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .back-home:hover {
+            color: var(--gold-rich);
+        }
+
+        /* =========================================================
+           MOBILE OPTIMIZATIONS
+        ========================================================= */
+        @media (max-width: 540px) {
+            .main-page {
+                padding: 24px 12px;
+            }
+            .glass-card {
+                padding: 32px 20px 26px;
+                border-radius: 10px;
+            }
+            .card-desc {
+                font-size: 12px;
+            }
+            .form-control {
+                height: 46px;
+                font-size: 14px;
+            }
+            .btn-portal {
+                height: 48px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Subtle ancient geometrical background texture -->
+    <div class="ancient-mesh"></div>
+
+    <!-- Canvas Particle Engine (Golden embers, time dust & Brahmi script echoes) -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- =========================================================
+         BACKGROUND HISTORICAL MOTIF 1: THE GRAND KAALCHAKRA
+    ========================================================= -->
+    <div class="kaalchakra-container" aria-hidden="true">
+        <svg class="kaalchakra-svg" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fceda4" stop-opacity="0.8"/>
+                    <stop offset="50%" stop-color="#d4a34b" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#7d501c" stop-opacity="0.4"/>
+                </linearGradient>
+                <radialGradient id="sunBurst" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ffeed0" stop-opacity="0.3"/>
+                    <stop offset="60%" stop-color="#d49b38" stop-opacity="0.1"/>
+                    <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+                </radialGradient>
+            </defs>
+
+            <!-- Background radiant halo -->
+            <circle cx="400" cy="400" r="390" fill="url(#sunBurst)"/>
+
+            <!-- Outer celestial border -->
+            <circle cx="400" cy="400" r="380" stroke="url(#goldGrad)" stroke-width="2.5" stroke-dasharray="14 10"/>
+            <circle cx="400" cy="400" r="365" stroke="url(#goldGrad)" stroke-width="1.2"/>
+
+            <!-- Counter-rotating outer astrological ring -->
+            <g class="kaalchakra-outer-ring">
+                <circle cx="400" cy="400" r="348" stroke="url(#goldGrad)" stroke-width="2" stroke-dasharray="6 14"/>
+                <!-- 12 Cardinal Astrolabe Points -->
+                <circle cx="400" cy="52" r="5" fill="#f5cf75"/>
+                <circle cx="400" cy="748" r="5" fill="#f5cf75"/>
+                <circle cx="52" cy="400" r="5" fill="#f5cf75"/>
+                <circle cx="748" cy="400" r="5" fill="#f5cf75"/>
+                <circle cx="646" cy="154" r="4" fill="#d4a34b"/>
+                <circle cx="154" cy="646" r="4" fill="#d4a34b"/>
+                <circle cx="154" cy="154" r="4" fill="#d4a34b"/>
+                <circle cx="646" cy="646" r="4" fill="#d4a34b"/>
+            </g>
+
+            <!-- Main 24 Spokes (Dharmachakra & Kaalchakra hours) -->
+            <g stroke="url(#goldGrad)" stroke-width="2">
+                <!-- 24 radial lines around 360 deg -->
+                <line x1="400" y1="70" x2="400" y2="730"/>
+                <line x1="70" y1="400" x2="730" y2="400"/>
+                <line x1="167" y1="167" x2="633" y2="633"/>
+                <line x1="167" y1="633" x2="633" y2="167"/>
+
+                <line x1="235" y1="85" x2="565" y2="715" stroke-dasharray="12 4"/>
+                <line x1="85" y1="235" x2="715" y2="565" stroke-dasharray="12 4"/>
+                <line x1="565" y1="85" x2="235" y2="715" stroke-dasharray="12 4"/>
+                <line x1="715" y1="235" x2="85" y2="565" stroke-dasharray="12 4"/>
+
+                <line x1="315" y1="72" x2="485" y2="728" opacity="0.7"/>
+                <line x1="72" y1="315" x2="728" y2="485" opacity="0.7"/>
+                <line x1="485" y1="72" x2="315" y2="728" opacity="0.7"/>
+                <line x1="728" y1="315" x2="72" y2="485" opacity="0.7"/>
+            </g>
+
+            <!-- Middle decorative ring with solar lotus petal markers -->
+            <circle cx="400" cy="400" r="260" stroke="url(#goldGrad)" stroke-width="3"/>
+            <circle cx="400" cy="400" r="240" stroke="url(#goldGrad)" stroke-width="1.5" stroke-dasharray="4 8"/>
+            <circle cx="400" cy="400" r="160" stroke="url(#goldGrad)" stroke-width="2.5"/>
+
+            <!-- Center Sacred Lotus Core -->
+            <circle cx="400" cy="400" r="80" stroke="url(#goldGrad)" stroke-width="2.5" fill="rgba(60, 35, 15, 0.4)"/>
+            <circle cx="400" cy="400" r="45" stroke="url(#goldGrad)" stroke-width="1.5"/>
+            <circle cx="400" cy="400" r="18" fill="url(#goldGrad)"/>
+        </svg>
+    </div>
+
+    <!-- =========================================================
+         BACKGROUND HISTORICAL MOTIF 2: LEFT MURAL (INDUS & VEDIC)
+    ========================================================= -->
+    <aside class="history-mural mural-left" aria-hidden="true">
+        <svg class="mural-svg" viewBox="0 0 280 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ancient Border Trim -->
+            <rect x="5" y="5" width="270" height="430" rx="6" stroke="rgba(212, 168, 83, 0.35)" stroke-width="1.2" stroke-dasharray="8 6"/>
+            <rect x="12" y="12" width="256" height="416" rx="4" stroke="rgba(212, 168, 83, 0.18)" stroke-width="1"/>
+
+            <!-- HARAPPAN BULL SEAL CARVING (Chapter 4) -->
+            <g transform="translate(30, 30)">
+                <!-- Seal Square Stone Base -->
+                <rect x="0" y="0" width="130" height="130" rx="10" fill="rgba(42, 24, 12, 0.55)" stroke="#d4a34b" stroke-width="1.6"/>
+                <!-- Indus Script Ideograms / Inscriptions on Top -->
+                <path d="M 20 22 L 20 40 M 15 26 L 35 26 M 30 22 L 30 40" stroke="#f3c96d" stroke-width="2" stroke-linecap="round"/>
+                <path d="M 50 24 Q 60 18 70 24 Q 60 42 50 24" stroke="#f3c96d" stroke-width="2" fill="none"/>
+                <path d="M 85 22 L 95 38 L 105 22" stroke="#f3c96d" stroke-width="2" stroke-linecap="round"/>
+                <line x1="12" y1="46" x2="118" y2="46" stroke="#916828" stroke-width="1"/>
+                <!-- Majestic Humped Bull & Stand -->
+                <path d="M 32 108 C 30 90 40 82 50 82 C 55 74 65 72 75 75 C 85 70 96 74 102 85 C 108 94 106 108 106 108" stroke="#f5cf75" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                <!-- Bull Head & Long Curved Horn -->
+                <path d="M 36 82 C 30 78 24 72 26 62 C 28 55 35 52 42 56" stroke="#f5cf75" stroke-width="2" fill="none"/>
+                <path d="M 34 60 C 35 48 46 44 54 48" stroke="#f5cf75" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Legs & Tail -->
+                <line x1="42" y1="108" x2="42" y2="120" stroke="#f5cf75" stroke-width="2"/>
+                <line x1="52" y1="108" x2="52" y2="118" stroke="#f5cf75" stroke-width="2"/>
+                <line x1="90" y1="108" x2="90" y2="120" stroke="#f5cf75" stroke-width="2"/>
+                <line x1="98" y1="108" x2="98" y2="118" stroke="#f5cf75" stroke-width="2"/>
+                <path d="M 105 92 Q 112 98 110 114" stroke="#f5cf75" stroke-width="1.5" fill="none"/>
+            </g>
+
+            <!-- VEDIC PALM-LEAF MANUSCRIPT SCROLL (Chapter 1 & 5) -->
+            <g transform="translate(25, 195)">
+                <!-- Bound manuscript slats with cord -->
+                <rect x="0" y="0" width="228" height="42" rx="4" fill="rgba(55, 32, 15, 0.6)" stroke="#c49237" stroke-width="1.4"/>
+                <circle cx="35" cy="21" r="5" fill="#140b05" stroke="#f5cf75" stroke-width="1.2"/>
+                <line x1="35" y1="0" x2="35" y2="42" stroke="#f5cf75" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <!-- Sanskrit/Brahmi hymn lines -->
+                <line x1="55" y1="14" x2="210" y2="14" stroke="#ecd197" stroke-width="1.8" stroke-dasharray="8 3 14 3 6 3"/>
+                <line x1="55" y1="23" x2="195" y2="23" stroke="#ecd197" stroke-width="1.8" stroke-dasharray="12 4 8 3 16 3"/>
+                <line x1="55" y1="31" x2="180" y2="31" stroke="#ecd197" stroke-width="1.8" stroke-dasharray="6 3 10 4 8 3"/>
+            </g>
+
+            <!-- BHIMBETKA CAVE ART PETROGLYPHS (Chapter 2) -->
+            <g transform="translate(45, 275)" stroke="#e29050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Running Stag/Antelope -->
+                <path d="M 120 40 L 145 35 L 175 42 L 165 65 L 130 62 Z" fill="none"/>
+                <!-- Antlers -->
+                <path d="M 120 40 L 110 25 M 115 32 L 105 30 M 112 26 L 102 20" stroke-width="1.5"/>
+                <!-- Stag Legs -->
+                <line x1="130" y1="62" x2="120" y2="82"/>
+                <line x1="135" y1="62" x2="132" y2="80"/>
+                <line x1="165" y1="65" x2="175" y2="82"/>
+                <line x1="160" y1="65" x2="168" y2="78"/>
+                <!-- Ancient Hunter with Bow -->
+                <circle cx="65" cy="42" r="6" fill="#e29050"/>
+                <line x1="65" y1="48" x2="65" y2="68"/>
+                <line x1="65" y1="68" x2="55" y2="85"/>
+                <line x1="65" y1="68" x2="74" y2="85"/>
+                <!-- Bow & Arrow -->
+                <path d="M 75 40 Q 88 54 75 68" fill="none"/>
+                <line x1="60" y1="54" x2="95" y2="54" stroke="#f5cf75"/>
+            </g>
+
+            <!-- PUNCH-MARKED COIN (Chapter 9) -->
+            <g transform="translate(180, 80)">
+                <circle cx="35" cy="35" r="30" fill="rgba(50, 30, 15, 0.7)" stroke="#c49237" stroke-width="1.8"/>
+                <circle cx="35" cy="35" r="10" stroke="#f5cf75" stroke-width="1.2"/>
+                <path d="M 35 15 L 35 55 M 15 35 L 55 35" stroke="#f5cf75" stroke-width="1.4"/>
+            </g>
+
+            <!-- Bottom Inscription Frame -->
+            <text x="140" y="415" text-anchor="middle" font-family="'Cinzel', serif" font-size="10" fill="#f5cf75" letter-spacing="2">INDUS • VEDIC • PREHISTORIC</text>
+        </svg>
+        <span class="mural-caption">Dawn of Civilisation</span>
+    </aside>
+
+    <!-- =========================================================
+         BACKGROUND HISTORICAL MOTIF 3: RIGHT MURAL (MAURYAN & GUPTA)
+    ========================================================= -->
+    <aside class="history-mural mural-right" aria-hidden="true">
+        <svg class="mural-svg" viewBox="0 0 280 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Ancient Border Trim -->
+            <rect x="5" y="5" width="270" height="430" rx="6" stroke="rgba(212, 168, 83, 0.35)" stroke-width="1.2" stroke-dasharray="8 6"/>
+            <rect x="12" y="12" width="256" height="416" rx="4" stroke="rgba(212, 168, 83, 0.18)" stroke-width="1"/>
+
+            <!-- ASHOKA LION CAPITAL (SARNATH - Chapter 8) -->
+            <g transform="translate(70, 25)">
+                <!-- Back-to-back Lions profile silhouette -->
+                <path d="M 60 52 C 55 35 70 20 85 20 C 95 20 102 26 105 35 C 112 30 120 34 120 42 C 120 48 115 54 110 56 C 112 65 106 75 95 78 L 95 90 L 45 90 L 45 78 C 34 75 28 65 30 56 C 25 54 20 48 20 42 C 20 34 28 30 35 35 C 38 26 45 20 55 20 C 70 20 85 35 80 52 Z" fill="rgba(65, 38, 18, 0.6)" stroke="#f5cf75" stroke-width="2"/>
+                <!-- Abacus base with Dharmachakra Wheel in Center -->
+                <rect x="25" y="90" width="90" height="14" rx="2" fill="rgba(40, 22, 10, 0.7)" stroke="#d4a34b" stroke-width="1.4"/>
+                <circle cx="70" cy="97" r="5" stroke="#fff1b8" stroke-width="1"/>
+                <line x1="70" y1="92" x2="70" y2="102" stroke="#fff1b8" stroke-width="0.8"/>
+                <line x1="65" y1="97" x2="75" y2="97" stroke="#fff1b8" stroke-width="0.8"/>
+                <!-- Inverted Lotus Bell Capital -->
+                <path d="M 32 104 C 35 120 50 128 70 128 C 90 128 105 120 108 104 Z" fill="rgba(45, 25, 12, 0.7)" stroke="#d4a34b" stroke-width="1.5"/>
+                <!-- Monolithic Ashoka Pillar Shaft (Polished Chunar Sandstone) -->
+                <rect x="56" y="128" width="28" height="36" fill="rgba(35, 18, 8, 0.7)" stroke="#c49237" stroke-width="1.2"/>
+            </g>
+
+            <!-- SANCHI STUPA GREAT DOME & TORANA GATE (Chapter 12) -->
+            <g transform="translate(30, 200)">
+                <!-- Stupa Anda (Hemispherical Dome) -->
+                <path d="M 25 100 C 25 45 85 30 110 30 C 135 30 195 45 195 100 Z" fill="rgba(55, 30, 14, 0.55)" stroke="#f3c96d" stroke-width="2"/>
+                <!-- Harmika (Square Railing atop Dome) -->
+                <rect x="95" y="18" width="30" height="12" fill="rgba(40, 20, 8, 0.8)" stroke="#d4a34b" stroke-width="1.2"/>
+                <!-- Chhatravali (Three Royal Umbrella Discs) -->
+                <line x1="110" y1="18" x2="110" y2="0" stroke="#f5cf75" stroke-width="1.8"/>
+                <line x1="98" y1="5" x2="122" y2="5" stroke="#f5cf75" stroke-width="1.5"/>
+                <line x1="102" y1="9" x2="118" y2="9" stroke="#f5cf75" stroke-width="1.5"/>
+                <line x1="105" y1="13" x2="115" y2="13" stroke="#f5cf75" stroke-width="1.5"/>
+                <!-- Pradakshina Patha (Circular Terraced Base) -->
+                <rect x="10" y="100" width="200" height="14" rx="2" fill="rgba(38, 20, 8, 0.7)" stroke="#d4a34b" stroke-width="1.5"/>
+
+                <!-- Ornate Torana Gateway Arch (Foreground) -->
+                <g stroke="#f5cf75" stroke-width="1.8">
+                    <!-- Twin Gate Pillars -->
+                    <line x1="45" y1="48" x2="45" y2="114"/>
+                    <line x1="85" y1="48" x2="85" y2="114"/>
+                    <!-- Three Horizontal Curved Architraves with Spirals -->
+                    <path d="M 35 55 Q 65 50 95 55" fill="none"/>
+                    <path d="M 35 63 Q 65 58 95 63" fill="none"/>
+                    <path d="M 35 71 Q 65 66 95 71" fill="none"/>
+                </g>
+            </g>
+
+            <!-- GUPTA COIN: EMPEROR PLAYING VEENA (Chapter 11) -->
+            <g transform="translate(45, 335)">
+                <!-- Gold Dinar Circle -->
+                <circle cx="40" cy="40" r="32" fill="rgba(65, 38, 15, 0.7)" stroke="#f5cf75" stroke-width="2"/>
+                <circle cx="40" cy="40" r="28" stroke="#916828" stroke-width="1" stroke-dasharray="3 3"/>
+                <!-- Stylized Seated King with Veena String Instrument -->
+                <circle cx="34" cy="26" r="4.5" fill="#f5cf75"/>
+                <path d="M 34 31 L 34 48 L 48 55" stroke="#f5cf75" stroke-width="1.6" fill="none"/>
+                <path d="M 28 35 Q 38 42 48 36" stroke="#f5cf75" stroke-width="1.8" fill="none"/>
+                <!-- Veena fretboard diagonal -->
+                <line x1="22" y1="46" x2="48" y2="28" stroke="#fff1b8" stroke-width="1.6"/>
+                <!-- Gupta Brahmi legend -->
+                <text x="56" y="44" font-family="'Cinzel', serif" font-size="7" fill="#f5cf75">𑀲𑀫𑀼𑀤𑁆𑀭</text>
+            </g>
+
+            <!-- Bottom Inscription Frame -->
+            <text x="140" y="415" text-anchor="middle" font-family="'Cinzel', serif" font-size="10" fill="#f5cf75" letter-spacing="2">MAURYA • SANCHI • GUPTA</text>
+        </svg>
+        <span class="mural-caption">Imperial Golden Age</span>
+    </aside>
+
+    <!-- =========================================================
+         MAIN PAGE / LOGIN INTERFACE
+    ========================================================= -->
+    <main class="main-page">
+
+        <!-- FROSTED GLASS LOGIN CARD -->
+        <section class="glass-card">
+
+            <!-- Engraved Inner Frame & Corner Brackets -->
+            <div class="inner-frame"></div>
+            <div class="corner-bracket tl"></div>
+            <div class="corner-bracket tr"></div>
+            <div class="corner-bracket bl"></div>
+            <div class="corner-bracket br"></div>
+
+            <!-- HEADER & LOGO -->
+            <div class="header-emblem">
+                <!-- Golden Hourglass / Kaalchakra Symbol -->
+                <svg class="emblem-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 2v6h.01L6 8.01 10 12l-4 4 .01.01H6V22h12v-5.99h-.01L18 16l-4-4 4-3.99-.01-.01H18V2H6zm10 14.5V20H8v-3.5l4-4 4 4zM12 11.5l-4-4V4h8v3.5l-4 4z"/>
+                </svg>
+            </div>
+
+            <h1 class="logo-title">KAALCHAKRA</h1>
+
+            <div class="ancient-line">
+                <span class="ancient-glyph">◈</span>
+                <span style="font-size: 11px; letter-spacing: 2px;">॥ कालचक्रम् ॥</span>
+                <span class="ancient-glyph">◈</span>
+            </div>
+
+            <p class="card-subtitle">PORTAL OF ANCIENT BHARAT</p>
+
+            <p class="card-desc">
+                The wheel of time awakens. <strong>Enter your explorer credentials</strong> to step through centuries of ancient wonders, kings, and civilizations.
+            </p>
+
+            <!-- LOGIN FORM -->
+            <form id="loginForm" method="POST" action="/api/auth/login" novalidate>
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label class="form-label" for="username">EXPLORER USERNAME</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-control"
+                            placeholder="Enter your username"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label" for="password">SECRET PASSCODE</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility" title="Show/Hide Password">
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remember & Forgot Options -->
+                <div class="login-meta">
+                    <label class="remember-wrap">
+                        <input type="checkbox" id="remember">
+                        <span>Remember my quest</span>
+                    </label>
+                    <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot passcode?</a>
+                </div>
+
+                <!-- Action Button -->
+                <button type="submit" class="btn-portal" id="submitBtn">
+                    <span>⚔ ENTER THE JOURNEY</span>
+                </button>
+
+                <!-- Feedback / Status Alert -->
+                <div id="message" class="message-box"></div>
+
+            </form>
+
+            <!-- Navigation Links -->
+            <footer class="footer-nav">
+                <p class="register-call">
+                    New to this era?
+                    <a href="/register">CREATE MY ACCOUNT</a>
+                </p>
+                <a href="/" class="back-home">
+                    ← Return to the Ancient World
+                </a>
+            </footer>
+
+        </section>
+
+    </main>
+
+    <!-- =========================================================
+         BACKGROUND INTERACTIVE SCRIPT & PARTICLES
+    ========================================================= -->
+    <script>
+        // Password Visibility Toggle
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordInput = document.getElementById("password");
+        if (togglePassword && passwordInput) {
+            togglePassword.addEventListener("click", function () {
+                const isPass = passwordInput.type === "password";
+                passwordInput.type = isPass ? "text" : "password";
+                this.textContent = isPass ? "🙈" : "👁";
+            });
+        }
+        // Form Validation + Flask Authentication
+        const loginForm = document.getElementById("loginForm");
+        const messageBox = document.getElementById("message");
+
+        function showLoginMessage(text, type) {
+            messageBox.textContent = text;
+            messageBox.className = "message-box show " + type;
+        }
+
+        // Match the PHP login flow:
+        // validate -> authenticate -> create session -> open dashboard.
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+
+            messageBox.className = "message-box";
+
+            if (username === "") {
+                showLoginMessage("⚠ Please enter both username and password.", "error");
+                return;
+            }
+
+            if (password === "") {
+                showLoginMessage("⚠ Please enter both username and password.", "error");
+                return;
+            }
+
+            if (password.length < 6) {
+                showLoginMessage("⚠ Passcode must contain at least 6 characters.", "error");
+                return;
+            }
+
+            const button = document.getElementById("submitBtn");
+            button.disabled = true;
+            button.innerHTML = "<span>⌛ ENTERING THE JOURNEY...</span>";
+
+            try {
+                const response = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    credentials: "include",
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                let data = {};
+                try {
+                    data = await response.json();
+                } catch (_) {
+                    data = {};
+                }
+
+                if (!response.ok || !data.success) {
+                    throw new Error(
+                        data.message ||
+                        "⚠ Invalid username or password. Please try again."
+                    );
+                }
+
+                // Optional "Remember my quest" preference.
+                if (document.getElementById("remember").checked) {
+                    localStorage.setItem("kaalchakra_remember_username", username);
+                } else {
+                    localStorage.removeItem("kaalchakra_remember_username");
+                }
+
+                window.location.href = "/dashboard";
+            } catch (error) {
+                showLoginMessage("⚠ " + error.message, "error");
+                button.disabled = false;
+                button.innerHTML = "<span>⚔ ENTER THE JOURNEY</span>";
+            }
+        });
+
+        // Show the same registration-success message used by the PHP version
+        // when Flask redirects back with ?registered=1.
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("registered") === "1") {
+            showLoginMessage(
+                "✦ Your journey has been created! You can now enter KAALCHAKRA.",
+                "success"
+            );
+        }
+
+        // Restore remembered username, if available.
+        const rememberedUsername =
+            localStorage.getItem("kaalchakra_remember_username");
+        if (rememberedUsername) {
+            document.getElementById("username").value = rememberedUsername;
+            document.getElementById("remember").checked = true;
+        }
+
+        function forgotPassword(event) {
+            event.preventDefault();
+            messageBox.className = "message-box show info";
+            messageBox.textContent = "⌛ Ancient sages are restoring passcode recovery. Please check with your teacher or guide.";
+        }
+
+        // =========================================================
+        // CANVAS ATMOSPHERIC GLOW & FLOATING TIME PARTICLES
+        // =========================================================
+        (function() {
+            const canvas = document.getElementById('bgCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            let glyphs = [];
+            const ancientGlyphs = ['𑀅', '𑀥', '𑀫', '𑀓', '𑀭', '𑀰', '𑀪', '𑀚', '𑀯'];
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize, { passive: true });
+            resize();
+
+            // Create initial glowing golden embers
+            const particleCount = Math.min(width < 768 ? 25 : 45, 55);
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 2.2 + 0.8,
+                    speedY: Math.random() * 0.45 + 0.15,
+                    speedX: (Math.random() - 0.5) * 0.35,
+                    opacity: Math.random() * 0.7 + 0.2,
+                    pulseSpeed: Math.random() * 0.02 + 0.01,
+                    pulseDir: Math.random() > 0.5 ? 1 : -1,
+                    hue: Math.random() > 0.3 ? '42, 95%, 65%' : '35, 90%, 55%'
+                });
+            }
+
+            // Periodically spawn floating Brahmi time-glyph
+            setInterval(() => {
+                if (glyphs.length < 4) {
+                    glyphs.push({
+                        char: ancientGlyphs[Math.floor(Math.random() * ancientGlyphs.length)],
+                        x: Math.random() * (width - 120) + 60,
+                        y: height + 20,
+                        size: Math.floor(Math.random() * 14 + 18),
+                        speedY: Math.random() * 0.35 + 0.2,
+                        opacity: 0,
+                        maxOpacity: Math.random() * 0.3 + 0.15,
+                        life: 0,
+                        maxLife: 400
+                    });
+                }
+            }, 3500);
+
+            function render() {
+                ctx.clearRect(0, 0, width, height);
+
+                // Draw and update glowing embers
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.y -= p.speedY;
+                    p.x += Math.sin(p.y * 0.01) * 0.4 + p.speedX;
+
+                    // Wrap around
+                    if (p.y < -10) {
+                        p.y = height + 10;
+                        p.x = Math.random() * width;
+                    }
+                    if (p.x < -10) p.x = width + 10;
+                    if (p.x > width + 10) p.x = -10;
+
+                    // Pulse opacity
+                    p.opacity += p.pulseSpeed * p.pulseDir;
+                    if (p.opacity > 0.85) { p.opacity = 0.85; p.pulseDir = -1; }
+                    if (p.opacity < 0.15) { p.opacity = 0.15; p.pulseDir = 1; }
+
+                    // Golden aura glow
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r * 2.8, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${p.hue}, ${p.opacity * 0.25})`;
+                    ctx.fill();
+
+                    // Ember core
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${p.hue}, ${p.opacity})`;
+                    ctx.fill();
+                }
+
+                // Draw and update subtle ancient time glyphs
+                for (let i = glyphs.length - 1; i >= 0; i--) {
+                    const g = glyphs[i];
+                    g.y -= g.speedY;
+                    g.life++;
+
+                    // Fade in then out
+                    if (g.life < 80) {
+                        g.opacity = (g.life / 80) * g.maxOpacity;
+                    } else if (g.life > g.maxLife - 80) {
+                        g.opacity = ((g.maxLife - g.life) / 80) * g.maxOpacity;
+                    }
+
+                    ctx.font = `${g.size}px 'Cinzel', serif`;
+                    ctx.fillStyle = `rgba(245, 207, 117, ${g.opacity})`;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(g.char, g.x, g.y);
+
+                    if (g.life >= g.maxLife || g.y < -30) {
+                        glyphs.splice(i, 1);
+                    }
+                }
+
+                requestAnimationFrame(render);
+            }
+
+            render();
+        })();
+    </script>
+</body>
+</html>

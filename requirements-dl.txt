@@ -1,0 +1,3 @@
+# Install after requirements.txt
+# TensorFlow/Keras is used for the learner Autoencoder.
+tensorflow

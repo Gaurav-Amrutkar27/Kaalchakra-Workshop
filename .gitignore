@@ -1,0 +1,29 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyCharm / IntelliJ
+.idea/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+
+# Local environment / secrets
+.env
+
+# Jupyter
+.ipynb_checkpoints/

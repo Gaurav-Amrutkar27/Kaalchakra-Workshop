@@ -1,0 +1,8 @@
+{
+  "model_version": "lstm_next_score_v1",
+  "sequence_length": 10,
+  "feature_dim": 5,
+  "samples": 80,
+  "loss": 0.20980632305145264,
+  "mae": 0.43963485956192017
+}
